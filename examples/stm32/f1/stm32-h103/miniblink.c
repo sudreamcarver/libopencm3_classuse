@@ -26,17 +26,15 @@ static void gpio_setup(void)
 	/* Manually: */
 	// RCC_APB2ENR |= RCC_APB2ENR_IOPCEN;
 	/* Using API functions: */
-	rcc_periph_clock_enable(RCC_GPIOB);
+	rcc_periph_clock_enable(RCC_GPIOC);
 
 	/* Set GPIO12 (in GPIO port C) to 'output push-pull'. */
 	/* Manually: */
 	// GPIOC_CRH = (GPIO_CNF_OUTPUT_PUSHPULL << (((12 - 8) * 4) + 2));
 	// GPIOC_CRH |= (GPIO_MODE_OUTPUT_2_MHZ << ((12 - 8) * 4));
 	/* Using API functions: */
-	gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO6);
-	gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO5);
-	gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO4);
-	gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO3);
+	gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_2_MHZ,
+		      GPIO_CNF_OUTPUT_PUSHPULL, GPIO12);
 }
 
 int main(void)
@@ -46,8 +44,7 @@ int main(void)
 	gpio_setup();
 
 	/* Blink the LED (PC12) on the board. */
-	//while (1)
-	//{
+	while (1) {
 		/* Manually: */
 		// GPIOC_BSRR = GPIO12;		/* LED off */
 		// for (i = 0; i < 800000; i++)	/* Wait a bit. */
@@ -65,25 +62,10 @@ int main(void)
 		// 	__asm__("nop");
 
 		/* Using API function gpio_toggle(): */
-		for(i=0;i<800000;i++)
+		gpio_toggle(GPIOC, GPIO12);	/* LED on/off */
+		for (i = 0; i < 800000; i++)	/* Wait a bit. */
 			__asm__("nop");
-
-		gpio_toggle(GPIOB, GPIO6);	 /* LED on/off */
-		for (i = 0; i < 800000; i++) /* Wait a bit. */
-			__asm__("nop");
-
-		gpio_toggle(GPIOB, GPIO5);
-		for (i = 0; i < 800000; i++)
-			__asm__("nop");
-
-		gpio_toggle(GPIOB, GPIO4);
-		for (i = 0; i < 800000; i++)
-			__asm("nop");
-
-		gpio_toggle(GPIOB, GPIO3);
-		for (i = 0; i < 800000; i++)
-			__asm__("nop");
-	//}
+	}
 
 	return 0;
 }

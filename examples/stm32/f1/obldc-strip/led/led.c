@@ -36,11 +36,13 @@ static void gpio_setup(void)
 {
 
 	/* Configure PB4 as GPIO. */
-	AFIO_MAPR |= AFIO_MAPR_SWJ_CFG_FULL_SWJ_NO_JNTRST;
+	AFIO_MAPR |= AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_OFF;
 	
 	/* Set GPIO4 and 5 (in GPIO port B) to 'output push-pull'. */
-	gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ,
-		      GPIO_CNF_OUTPUT_PUSHPULL, GPIO4 | GPIO5);
+	gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_PUSHPULL,GPIO3);
+	gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_PUSHPULL,GPIO4);
+	gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_PUSHPULL,GPIO5);
+	gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_PUSHPULL,GPIO6);
 	
 }
 
@@ -53,11 +55,20 @@ int main(void)
 
 	/* Blink the LEDs on the board. */
 	while (1) {
-		gpio_toggle(GPIOB, GPIO4);	/* LED on/off */
-		for (i = 0; i < 8000000; i++)	/* Wait a bit. */
+		gpio_toggle(GPIOB, GPIO4);
+		for (i = 0; i < 8000000; i++)
 			__asm__("nop");
+
 		gpio_toggle(GPIOB, GPIO5);	/* LED on/off */
 		for (i = 0; i < 8000000; i++)	/* Wait a bit. */
+			__asm__("nop");
+
+		gpio_toggle(GPIOB, GPIO6);	/* LED on/off */
+		for (i = 0; i < 8000000; i++)	/* Wait a bit. */
+			__asm__("nop");
+		
+		gpio_toggle(GPIOB, GPIO6);
+		for (i = 0; i < 8000000; i++)
 			__asm__("nop");
 	}
 
